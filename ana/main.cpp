@@ -2,18 +2,20 @@
 
 using namespace std;
 
+const int offset = 95;
+
 int kWord[100];
 int lWord[100];
 
 int main()
 {
     string k, l;
-    getline(cin, k);
-    getline(cin, l);
+    cin >> k;
+    cin >> l;
 
     if(k.length() != l.length())
     {
-        cout << "NIE" << endl;
+        cout << "NIE";
         return 0;
     }
 
@@ -21,19 +23,19 @@ int main()
 
     for(int i = 0; i < k.length(); i++)
     {
-        kWord[k[i] - 95]++;
-        lWord[l[i] - 95]++;
-        maxChar = max((int)(k[i] - 95), maxChar);
+        kWord[k[i] - offset]++;
+        lWord[l[i] - offset]++;
+        maxChar = max((int)(k[i] - offset), maxChar);
     }
 
     for(int i = 0; i < maxChar; i++)
     {
         if(kWord[i] != lWord[i])
         {
-            cout << "NIE" << endl;
+            cout << "NIE";
             return 0;
         }
     }
 
-    cout << "TAK" << endl;
+    cout << "TAK";
 }
