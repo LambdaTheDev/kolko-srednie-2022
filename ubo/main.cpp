@@ -1,22 +1,11 @@
 #include <iostream>
+#include <bits/stdc++.h>
 
 using namespace std;
 
 int buffer[1000000];
 int skippedIndexesCount[100000];
 
-int binSearch(int searchedValue, int from, int to)
-{
-    if(from > to) return -1;
-
-    int target = (from + to) / 2;
-    if(searchedValue == buffer[target] && buffer[target + 1] > searchedValue)
-        return target;
-
-    if(searchedValue < buffer[target])
-        return binSearch(searchedValue, from, target - 1);
-    else return binSearch(searchedValue, target + 1, to);
-}
 
 int main()
 {
@@ -34,12 +23,30 @@ int main()
         if(t > lastValue)
         {
             buffer[updatedBufferCount++] = t;
+            lastValue = t;
+
+            skippedIndexesCount[updatedBufferCount - 1] += skippedIndexesCount[updatedBufferCount - 2];
         }
         else
         {
-            skippedIndexesCount[updatedBufferCount]++;
+            skippedIndexesCount[updatedBufferCount - 1]++;
         }
     }
+
+    skippedIndexesCount[updatedBufferCount] = skippedIndexesCount[updatedBufferCount - 1];
+
+//    cout << endl << "DEBUG OF NEW ARR: " << endl;
+//    for(int i = 0; i < updatedBufferCount; i++)
+//    {
+//        cout << buffer[i] << " ";
+//    }
+//
+//    cout << endl << "DEBUG OF SKIPPED: " << endl;
+//    for(int i = 0; i < updatedBufferCount; i++)
+//    {
+//        cout << skippedIndexesCount[i] << " ";
+//    }
+//    cout << endl << endl;
 
     int k;
     cin >> k;
@@ -48,16 +55,23 @@ int main()
         int check;
         cin >> check;
 
-        check++; // to find at least greater
-        int index = binSearch(check, 0, updatedBufferCount);
-        if(index == -1)
+        if(check > buffer[updatedBufferCount - 1])
         {
             cout << "b ";
+            continue;
         }
-        else
+        else if(check < buffer[0])
         {
-
-            cout << index << " ";
+            cout << "1 ";
+            continue;
         }
+
+
+        check++;
+        int* ptr = upper_bound(buffer, buffer + updatedBufferCount, check);
+        int index = ptr - buffer;
+
+        int actualIndex = index + skippedIndexesCount[index];
+        cout << actualIndex << " ";
     }
 }
